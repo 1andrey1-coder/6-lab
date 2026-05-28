@@ -1,26 +1,21 @@
 #include <stdio.h>
-#include <stdlib.h>
-
-#ifdef _WIN32
-#include <windows.h>
-#endif
 
 int main() {
-    #ifdef _WIN32
-    SetConsoleCP(65001);
-    SetConsoleOutputCP(65001);
-    #endif
-
-    FILE *fin = fopen("input.txt", "r");
-    if (fin == NULL) {
-        printf("Ошибка открытия входного файла\n");
+    // 1. Создаем первый файл и записываем в него исходные данные
+    FILE *f_out = fopen("input.txt", "w");
+    if (f_out == NULL) {
         return 1;
     }
+    fprintf(f_out, "Иванов Петр Сергеевич 1975\n");
+    fprintf(f_out, "Сидоров Николай Андреевич 1981\n");
+    fprintf(f_out, "Воробьянинов Ипполит Матвеевич 1978\n");
+    fclose(f_out);
 
-    FILE *fout = fopen("output.txt", "w");
-    if (fout == NULL) {
-        printf("Ошибка создания выходного файла\n");
-        fclose(fin);
+    // 2. Открываем файл с данными для чтения и новый файл для записи результата
+    FILE *f_in = fopen("input.txt", "r");
+    FILE *f_res = fopen("output.txt", "w");
+
+    if (f_in == NULL || f_res == NULL) {
         return 1;
     }
 
@@ -29,15 +24,17 @@ int main() {
     char patronymic[50];
     int year;
 
-    while (fscanf(fin, "%49s %49s %49s %d", surname, name, patronymic, &year) == 4) {
+    // 3. Читаем файл построчно, пока не дойдем до конца (EOF)
+    while (fscanf(f_in, "%s %s %s %d", surname, name, patronymic, &n) != EOF) {
+        // Проверяем условие: родился позднее 1980 года
         if (year > 1980) {
-            fprintf(fout, "%s %s %s %d\n", surname, name, patronymic, year);
+            fprintf(f_res, "%s %s %s %d\n", surname, name, patronymic, year);
         }
     }
 
-    fclose(fin);
-    fclose(fclose(fout) ? fout : fout);
+    // 4. Обязательно закрываем оба файла
+    fclose(f_in);
+    fclose(f_res);
 
-    printf("Обработка файла завершена успешно\n");
     return 0;
 }
