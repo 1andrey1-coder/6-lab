@@ -21,14 +21,14 @@ int main() {
 
     char surname[50];
     char name[50];
-    char patronymic[50];
+    char patr[50];
     int year;
 
     // 3. Читаем файл построчно, пока не дойдем до конца (EOF)
     while (fscanf(f_in, "%s %s %s %d", surname, name, patronymic, &n) != EOF) {
         // Проверяем условие: родился позднее 1980 года
         if (year > 1980) {
-            fprintf(f_res, "%s %s %s %d\n", surname, name, patronymic, year);
+            fprintf(f_res, "%s %s %s %d\n", surname, name, patr, year);
         }
     }
 
